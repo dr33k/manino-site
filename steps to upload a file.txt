@@ -1,0 +1,6 @@
+Target directory
+Target file  = target directory+ file name
+Get File etension using PATHINFO_EXTENSION as a second parameter
+check if file already exists
+Limit file size
+Limit file type

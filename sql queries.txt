@@ -1,0 +1,56 @@
+Store 'Products' table SQL
+CREATE TABLE `store`.`products` ( `Product_ID` INT NOT NULL AUTO_INCREMENT , `Category_ID` INT NOT NULL , `Supplier_ID` INT NOT NULL , `Order_ID` INT NOT NULL , `Product_Name` VARCHAR(100) NOT NULL , `Product_Descr` VARCHAR(150) NULL DEFAULT NULL , `Quantity_Per_Unit` TINYINT(10) NOT NULL DEFAULT '1' , `Unit_Price` DECIMAL NOT NULL , `Available_Sizes` VARCHAR(100) NOT NULL , `Available_Colors` VARCHAR(100) NOT NULL , `Size` VARCHAR(50) NOT NULL , `Color` VARCHAR(50) NOT NULL , `Units_In_Stock` INT NOT NULL DEFAULT '0' , `Discount` DECIMAL NOT NULL DEFAULT '0.00' , `Units_On_Order` INT NOT NULL DEFAULT '1' , `Product_Available` BOOLEAN NOT NULL DEFAULT FALSE , `Discount_Available` BOOLEAN NOT NULL DEFAULT FALSE , `Picture` VARCHAR(100) NULL DEFAULT NULL , PRIMARY KEY (`Product_ID`)) ENGINE = InnoDB COMMENT = 'Info for unit product';
+ALTER TABLE `products` CHANGE `Order_ID` `Order_ID` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `products` CHANGE `Unit_Price` `Unit_Price` DECIMAL(10,2) NOT NULL;
+ALTER TABLE `products` ADD `Leather_Variation` VARCHAR(100) NULL DEFAULT NULL AFTER `Product_Name`;
+ALTER TABLE `products` DROP `Picture`;
+ALTER TABLE `products` CHANGE `Available_Sizes` `Available_Sizes` SET('38','39','40','41','42','43','44','45','46','47','48','49','50','51') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `products` CHANGE `Available_Colors` `Available_Colors` SET('Black','White','Brown','Maroon','Red','Yellow','Green','Light Blue','Dark Blue','Pink','Light Gray','Dark Gray') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `products` DROP `Available_Colors`;
+ALTER TABLE `products` DROP `Size`;
+ALTER TABLE `products`
+  DROP `Unit_Price`,
+  DROP `Available_Sizes`,
+  DROP `Units_In_Stock`,
+  DROP `Discount_Available`;
+ALTER TABLE `products` CHANGE `Discount` `Discount` DECIMAL(10,0) NULL DEFAULT NULL;
+ALTER TABLE `products` ADD `Entry_Date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `Product_Available`;
+
+Store'Customers' table SQL
+CREATE TABLE `store`.`customers` ( `Customer_ID` INT NOT NULL AUTO_INCREMENT , `First_Name` VARCHAR(255) NOT NULL , `Last_Name` VARCHAR(255) NOT NULL , `Email` VARCHAR(255) NOT NULL , `Full_Address` VARCHAR(255) NOT NULL , `Phone` VARCHAR(200) NOT NULL , `Password` VARCHAR(200) NOT NULL , `Credit_Card` VARCHAR(100) NOT NULL , `CardExpMo` SMALLINT NOT NULL , `CardExpYr` SMALLINT NOT NULL , `Date_Registered` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`Customer_ID`)) ENGINE = InnoDB;
+
+Store'Suppliers' table SQL
+CREATE TABLE `store`.`suppliers` ( `Supplier_ID` INT NOT NULL AUTO_INCREMENT , `Company_Name` VARCHAR(255) NOT NULL , `Contact_Name` VARCHAR(255) NOT NULL , `Company_Address` VARCHAR(255) NULL DEFAULT NULL , `Company_Email` VARCHAR(255) NOT NULL , `Company_Phone` VARCHAR(100) NOT NULL , `Company_URL` TEXT NOT NULL , PRIMARY KEY (`Supplier_ID`)) ENGINE = InnoDB;
+ALTER TABLE `suppliers` ADD `Date_Registered` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `Company_URL`;
+
+Store'Orders' table SQL
+CREATE TABLE `store`.`orders` ( `Order_ID` INT NOT NULL AUTO_INCREMENT , `Customer_ID` INT NOT NULL , `Order_Number` VARCHAR(8) NOT NULL , `Order_Date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `Delivery_Date` TIMESTAMP NULL DEFAULT NULL , `Transact_Status` ENUM("Pending","Completed","Cancelled") NOT NULL , `Paid` BOOLEAN NOT NULL DEFAULT FALSE , `Payment_Date` TIMESTAMP NULL DEFAULT NULL , `Payment_ID` INT NOT NULL , PRIMARY KEY (`Order_ID`), UNIQUE (`Customer_ID`)) ENGINE = InnoDB;
+
+Store'Payment' table SQL
+CREATE TABLE `store`.`payment` ( `Payment_ID` INT NOT NULL AUTO_INCREMENT , `Payment_Type` VARCHAR(255) NOT NULL , `Allowed` BOOLEAN NOT NULL , PRIMARY KEY (`Payment_ID`)) ENGINE = InnoDB;
+
+Store'OrderDetails' table SQL
+CREATE TABLE `store`.`order_details` ( `Order_Details_ID` INT NOT NULL AUTO_INCREMENT , `Order_ID` INT NOT NULL , `Payment_ID` INT NOT NULL , `Order_Number` VARCHAR(8) NOT NULL , `Price` DECIMAL NOT NULL , `Size` VARCHAR(100) NOT NULL , `Color` INT NOT NULL , PRIMARY KEY (`Order_Details_ID`), UNIQUE (`Payment_ID`), UNIQUE (`Order_Number`)) ENGINE = InnoDB;
+ALTER TABLE `order_details` ADD `Discount` DECIMAL NULL DEFAULT NULL AFTER `Color`;
+ALTER TABLE `order_details` CHANGE `Price` `Price` DECIMAL(10,2) NOT NULL;
+ALTER TABLE `order_details` CHANGE `Discount` `Discount` DECIMAL(10,2) NULL DEFAULT NULL;
+ALTER TABLE `order_details` ADD `Leather_Variation` VARCHAR(100) NULL DEFAULT NULL AFTER `Color`;
+
+Store'Categories' table SQL
+CREATE TABLE `store`.`category` ( `Category_ID` INT NOT NULL AUTO_INCREMENT , `Category_Name` VARCHAR(100) NOT NULL , `Description` VARCHAR(200) NOT NULL , `Picture` VARCHAR(255) NOT NULL , `Active` BOOLEAN NOT NULL DEFAULT TRUE , PRIMARY KEY (`Category_ID`)) ENGINE = InnoDB;
+
+Store "Measurements" table SQL
+CREATE TABLE `store`.`measurements` ( `Measurement_ID` INT NOT NULL AUTO_INCREMENT , `Shoe_Size` ENUM("40","41","42","43","44","45","46","47","48","49","50") NOT NULL COMMENT 'User Defined Dimensions' , `Dimensions` VARCHAR(200) NOT NULL , PRIMARY KEY (`Measurement_ID`)) ENGINE = InnoDB;
+
+Store "products_img" table SQL
+CREATE TABLE `store`.`products_img` ( `Products_Img_ID` INT NOT NULL AUTO_INCREMENT , `Product_ID` INT NOT NULL , `Image_Name` VARCHAR(255) NOT NULL , PRIMARY KEY (`Products_Img_ID`)) ENGINE = InnoDB;
+
+store "stock" table sql
+CREATE TABLE `stock` (`Stock_ID` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+                      `Product_ID` INT NOT NULL,
+                      `Product_Name` VARCHAR(255) NOT NULL,
+                      `Available_Sizes` VARCHAR(50) NOT NULL,
+                      `Units_In_Stock` INT NOT NULL,
+                      `Unit_Price` DECIMAL(10,2) NOT NULL,
+                      `Discount_Available` TINYINT(1) DEFAULT '0'
+                     ) ENGINE = InnoDB;
